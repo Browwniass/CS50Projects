@@ -31,7 +31,7 @@ body{
 .search-text {
     width: 540px;
     height: 46px;    
-    background: url("icons8-search-48.png") no-repeat left;
+    background: url("img/icons8-search-48.png") no-repeat left;
     background-size: 17px;
     background-position-x: 10px;
     padding-left: 35px;
