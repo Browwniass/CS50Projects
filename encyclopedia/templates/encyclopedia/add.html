@@ -1,0 +1,25 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Add
+{% endblock %}
+
+{% block body %}
+    <h1>Create New Page</h1>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form action="{% url 'add' %}" method="post">
+        {% csrf_token %}
+        <input class="name-input" type="text" name="title_input" placeholder="Type a title" required="required">
+        <br>
+        <textarea id="create-area" name="create_entries" rows="5" cols="50" placeholder="..."></textarea>
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+
+{% endblock %}
