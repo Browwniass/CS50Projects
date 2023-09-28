@@ -30,7 +30,7 @@ class NewListingForm(forms.Form):
                             required=False , label="",
                            widget= forms.Select
                            (attrs={'class':'form-control',
-                            'placeholder': 'Category'})) 
+                            'placeholder': 'Category[Optional]'})) 
     
     """forms.CharField(max_length=60, label="",
                            widget= forms.TextInput
@@ -38,7 +38,8 @@ class NewListingForm(forms.Form):
                             'placeholder': 'Category'}))"""
 
 def index(request):
-    return render(request, "auctions/index.html")
+    forms = Bids.objects.filter(listing__is_active=True).select_related('listing')
+    return render(request, "auctions/index.html", {'forms':forms})
 
 
 def login_view(request):
@@ -93,9 +94,8 @@ def register(request):
         return render(request, "auctions/register.html")
 
 
-def create_view(request):
-    current_user = request.user.id
-    
+def create_view(request):   
+
     if request.method=="POST":
         
         form = NewListingForm(request.POST)
@@ -121,3 +121,4 @@ def create_view(request):
 
     return render(request, "auctions/create_listing.html", 
         {"form":NewListingForm()})
+
