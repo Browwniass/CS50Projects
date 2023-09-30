@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django import forms 
 
-from .models import User, Listings, Bids, Categories
+from .models import User, Listings, Bids, Categories, Comments
  
 
 class NewListingForm(forms.Form):
@@ -122,3 +122,15 @@ def create_view(request):
     return render(request, "auctions/create_listing.html", 
         {"form":NewListingForm()})
 
+
+def page(request, title):
+    listing=Listings.objects.get(pk=title)
+    if listing:       
+        comments=Comments.objects.filter(listing=listing)
+        bids=Bids.objects.filter(listing=listing)
+        
+        bid=Bids.objects.get(listing=listing)
+        return render(request, "auctions/page.html", {
+    "title": title, "listing": listing, "comments": comments, "bid": bid.price})
+    else:
+        return render(request, "auctions/error.html")

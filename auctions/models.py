@@ -37,6 +37,7 @@ class Bids(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="bids_user")
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="bids_listing")
     price = models.IntegerField()
+    is_current=models.BooleanField()
 
     def __str__(self):
         return f"{self.author}:{self.listing}" 
