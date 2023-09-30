@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block body %}
+    <div class="cont-page">    
+        <h2>{{ listing.title }}</h2>
+        <div class="wathclist"></div>
+        <div class="cont-item">
+            <img class="img-fluid img-responsive rounded product-image" src={{ listing.photo }}>
+        </div>
+        <div class="cont-item">
+            <p>{{ listing.description }}</p>
+        </div>
+        <div class="cont-item">
+            <h4>${{ bid }}</h4>
+        </div>
+        <div class="cont-item">
+            <p></p>
+        </div>
+
+
+        {% for comment in comments %}
+            <p>{{ comment.comment }}</p>
+        {% endfor %}
+    </div>
+{% endblock %}
