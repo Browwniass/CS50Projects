@@ -1,0 +1,39 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    {% for form in forms %}
+    <div class="cont-index container mt-5 mb-5 justify-content-left">
+        <div class="d-flex justify-content-left row">
+            <div class="col-md-10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           `````">
+                <div class="row p-2 bg-white border rounded">
+                    <div class="col-md-3 mt-1"><img class="img-fluid img-responsive rounded product-image main-list-img" src={{ form.listing.photo }}></div>
+                    <div class="col-md-6 mt-1">
+                        <h5>{{ form.listing.title }}</h5>
+                        <p class="text-justify text-truncate para mb-0">{{ form.listing.description }}<br><br></p>
+                    </div>
+                    <div class="align-items-center align-content-center col-md-3 border-left mt-1">
+                        <div class="d-flex flex-row align-items-center">
+                            <h4 class="mr-1">${{ form.price }}</h4>
+                        </div>
+                        {% if form.listing.is_active %}
+                        <h6 class="text-success">Active</h6>
+                        {% else %}
+                        <h6 class="text-success">Closed</h6>
+                        {% endif %}
+                        <div class="d-flex flex-column mt-4"><button onclick="window.location.href='{{ form.listing.id }}'" class="btn btn-primary btn-sm" type="button">Details</button></a>
+                            <form action="{% url 'bid_page' form.listing.id %}" method="post">
+                                {% csrf_token %}
+                                <input name="redirect-form" type="text" value="index" hidden>
+                                {% if user.is_authenticated %}<input  class="btn btn-outline-success btn-sm mt-2" name="but-watchlist" type="submit" value="Add to watchlist"> {% endif %}
+                            </form>
+                        </div>
+                            
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}

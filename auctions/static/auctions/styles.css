@@ -1,0 +1,99 @@
+body{background:#f1f0f0;margin: 15px;}.ratings i{font-size: 16px;color: red}.strike-text{color: red;text-decoration: line-through}.product-image{max-width: 500px; max-height: 450px}.dot{height: 7px;width: 7px;margin-left: 6px;margin-right: 6px;margin-top: 3px;background-color: blue;border-radius: 50%;display: inline-block}.spec-1{color: #938787;font-size: 15px}h5{font-weight: 400}.para{font-size: 16px}
+a{text-decoration: none;}
+.main-list-img{
+    height:195px;
+    width: 195px;
+}
+.cont-item{
+    
+    max-width:900px; 
+    max-height: 450px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 0px;
+}
+.listing-photo{
+    max-height: 450px;
+    object-fit: fill;
+}
+.cont-index{
+    max-width: 1600px; 
+}
+
+.card {
+    
+    border: none;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+    border-radius: 4px;
+}
+
+
+.dots{
+
+  height: 4px;
+  width: 4px;
+  margin-bottom: 2px;
+  background-color: #bbb;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.badge{
+
+    padding: 7px;
+    padding-right: 9px;
+    padding-left: 16px;
+    box-shadow: 5px 6px 6px 2px #e9ecef;
+}
+
+.user-img{
+
+    margin-top: 4px;
+}
+
+.check-icon{
+
+    font-size: 17px;
+    color: #c3bfbf;
+    top: 1px;
+    position: relative;
+    margin-left: 3px;
+}
+
+.form-check-input{
+    margin-top: 6px;
+    margin-left: -24px !important;
+    cursor: pointer;
+}
+
+
+.form-check-input:focus{
+    box-shadow: none;
+}
+
+
+.icons i{
+
+    margin-left: 8px;
+}
+.reply{
+
+    margin-left: 12px;
+}
+
+.reply small{
+
+    color: #b7b4b4;
+
+}
+
+
+.reply small:hover{
+
+    color: green;
+    cursor: pointer;
+
+}
+.card.p-3{
+    margin:10px;
+}
