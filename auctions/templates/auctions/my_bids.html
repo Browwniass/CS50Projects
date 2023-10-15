@@ -1,7 +1,7 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>My bids</h2>
     {% for form in forms %}
     <div class="cont-index container mt-5 mb-5 justify-content-left">
         <div class="d-flex justify-content-left row">
@@ -19,7 +19,7 @@
                         {% if form.listing.is_active %}
                         <h6 class="text-success">Active</h6>
                         {% else %}
-                        <h6 class="text-success">Closed</h6>
+                        <h6 class="text-warning">Closed</h6>
                         {% endif %}
                         <div class="d-flex flex-column mt-4"><button onclick="window.location.href='{{ form.listing.id }}'" class="btn btn-primary btn-sm" type="button">Details</button></a>
                             <form action="{% url 'bid_page' form.listing.id %}" method="post">

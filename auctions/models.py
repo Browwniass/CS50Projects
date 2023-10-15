@@ -16,11 +16,12 @@ class Categories(models.Model):
 
 class Listings(models.Model):
     title = models.CharField(max_length=100)
-    description = models.CharField(max_length=400)
+    description = models.CharField(max_length=1000)
     photo = models.URLField(max_length=150)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_user")
     is_active = models.BooleanField()
     id_categories = models.ForeignKey(Categories, on_delete=models.CASCADE, related_name="listing_categories")
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name="listing_owner", blank=True, null=True)
 
     def __str__(self):
         return f"{self.title}"
@@ -45,7 +46,6 @@ class Bids(models.Model):
 class Watchlist(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="watchlist_user")
     listing = models.ForeignKey(Listings, on_delete=models.CASCADE, related_name="watchlist_listing")
-
     
     def __str__(self):
         return f"{self.author}:{self.listing}" 

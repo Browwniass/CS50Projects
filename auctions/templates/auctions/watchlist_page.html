@@ -1,9 +1,9 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2>Watchlist</h2>
     {% for form in forms %}
-    <div class="cont-index container mt-5 mb-5 justify-content-left">
+    <div class="cont-index container mt-5 mb-5">
         <div class="d-flex justify-content-left row">
             <div class="col-md-10                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           `````">
                 <div class="row p-2 bg-white border rounded">
@@ -16,19 +16,14 @@
                         <div class="d-flex flex-row align-items-center">
                             <h4 class="mr-1">${{ form.price }}</h4>
                         </div>
-                        {% if form.listing.is_active %}
-                        <h6 class="text-success">Active</h6>
-                        {% else %}
-                        <h6 class="text-success">Closed</h6>
-                        {% endif %}
+                        <h6 class="text-success">Active:{{ form.listing.is_active }}</h6>
                         <div class="d-flex flex-column mt-4"><button onclick="window.location.href='{{ form.listing.id }}'" class="btn btn-primary btn-sm" type="button">Details</button></a>
                             <form action="{% url 'bid_page' form.listing.id %}" method="post">
                                 {% csrf_token %}
-                                <input name="redirect-form" type="text" value="index" hidden>
-                                {% if user.is_authenticated %}<input  class="btn btn-outline-success btn-sm mt-2" name="but-watchlist" type="submit" value="Add to watchlist"> {% endif %}
+                                <input class="btn btn-outline-success btn-sm mt-2" name="but_rem_watch" type="submit" value="Remove wishlist">
                             </form>
-                        </div>
                             
+                        </div>
                     </div>
                 </div>
             </div>
