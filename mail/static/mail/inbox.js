@@ -37,7 +37,23 @@ function load_mailbox(mailbox) {
       console.log(emails);
 
       // ... do something else with emails ...
+      emails.forEach((email) => {
+        const element = document.createElement('div');
+        // Add a class to the element
+        element.classList.add('mail-item');
+        
+        email.read ? element.style.backgroundColor='gray' : element.style.backgroundColor='white';
+
+        element.innerHTML = `<p><span class="sender">${email.sender}</span> ${email.subject}</p>
+        <p class='time'>${email.timestamp}</p>`;
+        element.addEventListener('click', function() {
+            console.log('This element has been clicked!')
+        });
+        document.querySelector('#emails-view').append(element);  
+      })
+
   });
+
 }
 
 function send_email(event){
