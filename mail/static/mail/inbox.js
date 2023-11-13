@@ -46,9 +46,7 @@ function load_mailbox(mailbox) {
 
         element.innerHTML = `<p><span class="sender">${email.sender}</span> ${email.subject}</p>
         <p class='time'>${email.timestamp}</p>`;
-        element.addEventListener('click', function() {
-            console.log('This element has been clicked!')
-        });
+        element.addEventListener('click', () => load_email(email.id));
         document.querySelector('#emails-view').append(element);  
       })
 
@@ -77,4 +75,34 @@ function send_email(event){
   });
   load_mailbox('sent')
 
+}
+
+function load_email(id){
+  document.querySelector('#emails-view').innerHTML = "";
+  
+  fetch(`/emails/${id}`)
+  .then(response => response.json())
+  .then(email => {
+      // Print email
+      console.log(email);
+
+      // ... do something else with email ...
+      const element = document.createElement('div');
+      // Add a class to the element
+      element.classList.add('email-view');
+      element.innerHTML = `<p><b>From: </b>${email.sender}</p>
+      <p><b>To: </b>${email.recipients}</p>
+      <p><b>Subject: </b>${email.subject}</p>
+      <p><b>Timestamp: </b>${email.timestamp}</p>
+      <hr>
+      <p>${email.body}</p>`;
+      document.querySelector('#emails-view').append(element);
+  });
+  //Mark the email as read
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        read: true
+    })
+  })
 }

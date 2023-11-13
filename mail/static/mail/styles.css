@@ -1,8 +1,13 @@
 textarea {
     min-height: 400px;
 }
-.mail-item{
+.email-view, .mail-item{
     border: solid 2px black; 
+}
+.email-view{
+    padding: 2px 5px;
+}
+.mail-item{
     margin-bottom: 2px;
     display: flex;
     justify-content: space-between;
