@@ -156,10 +156,10 @@ function reply_email(id){
       document.querySelector('#emails-view').style.display = 'none';
       document.querySelector('#compose-view').style.display = 'block';
 
-      // Clear out composition fields
-      document.querySelector('#compose-recipients').value = `${email.recipients}`;
+      document.querySelector('#compose-sender').value = `${email.recipients}`;
+      document.querySelector('#compose-recipients').value = `${email.sender}`;
       const sub_re = email.subject.substring(0,3)=="Re:" ? "" : "Re: ";
       document.querySelector('#compose-subject').value = `${sub_re}${email.subject}`;
-      document.querySelector('#compose-body').value = `"On ${email.timestamp} ${email.recipients} wrote: ${email.body}"\n`;
+      document.querySelector('#compose-body').value = `"On ${email.timestamp} ${email.sender} wrote: ${email.body}"\n`;
   });
 }
