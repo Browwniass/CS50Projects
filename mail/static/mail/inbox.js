@@ -36,20 +36,18 @@ function load_mailbox(mailbox) {
       // Print emails
       console.log(emails);
 
-      // ... do something else with emails ...
+      // Show emails
       emails.forEach((email) => {
         const element = document.createElement('div');
         // Add a class to the element
         element.classList.add('mail-item');
-        
+        // Mark read/unread 
         email.read ? element.style.backgroundColor='gray' : element.style.backgroundColor='white';
-
         element.innerHTML = `<p><span class="sender">${email.sender}</span> ${email.subject}</p>
         <p class='time'>${email.timestamp}</p>`;
         element.addEventListener('click', () => load_email(email.id, mailbox));
         document.querySelector('#emails-view').append(element);  
       })
-
   });
 
 }
@@ -59,7 +57,7 @@ function send_email(event){
   let recipients = document.querySelector('#compose-recipients').value;
   let subject = document.querySelector('#compose-subject').value;
   let body = document.querySelector('#compose-body').value;
-  
+  // Sending email
   fetch('/emails', {
     method: 'POST',
     body: JSON.stringify({
@@ -70,12 +68,10 @@ function send_email(event){
   })
   .then(response => response.json())
   .then(result => {
-      // Print result
+      // Print result and load sent-view
       console.log(result);
+      load_mailbox('sent')
   });
-  load_mailbox('sent')
-  location.reload();
-
 }
 
 function load_email(id, mailbox){
@@ -86,8 +82,7 @@ function load_email(id, mailbox){
   .then(email => {
       // Print email
       console.log(email);
-
-      // ... do something else with email ...
+      // head html
       const head = document.createElement('div');
       head.innerHTML = `<p><b>From: </b>${email.sender}</p>
       <p><b>To: </b>${email.recipients}</p>
@@ -116,9 +111,8 @@ function load_email(id, mailbox){
       reply_button.innerHTML = '<button class="btn btn-sm btn-outline-primary" id="reply">Reply</button>';
       reply_button.addEventListener('click', () => reply_email(email.id));
       document.querySelector('#emails-view').append(reply_button);
-      
 
-
+      // body of email
       const body = document.createElement('div');
       body.innerHTML = `<hr><p>${email.body}</p>`;
       document.querySelector('#emails-view').append(body);
@@ -140,7 +134,6 @@ function archive_email(id, is_archived){
         archived: is_archived
     })
   })
-
   load_mailbox('inbox');
   location.reload();
 }
@@ -155,11 +148,12 @@ function reply_email(id){
       // Show compose view and hide other views
       document.querySelector('#emails-view').style.display = 'none';
       document.querySelector('#compose-view').style.display = 'block';
-
+    // Filling info about email
       document.querySelector('#compose-sender').value = `${email.recipients}`;
       document.querySelector('#compose-recipients').value = `${email.sender}`;
       const sub_re = email.subject.substring(0,3)=="Re:" ? "" : "Re: ";
       document.querySelector('#compose-subject').value = `${sub_re}${email.subject}`;
       document.querySelector('#compose-body').value = `"On ${email.timestamp} ${email.sender} wrote: ${email.body}"\n`;
   });
+  load_mailbox('sent')
 }
