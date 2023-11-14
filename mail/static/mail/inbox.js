@@ -46,7 +46,7 @@ function load_mailbox(mailbox) {
 
         element.innerHTML = `<p><span class="sender">${email.sender}</span> ${email.subject}</p>
         <p class='time'>${email.timestamp}</p>`;
-        element.addEventListener('click', () => load_email(email.id));
+        element.addEventListener('click', () => load_email(email.id, mailbox));
         document.querySelector('#emails-view').append(element);  
       })
 
@@ -77,7 +77,7 @@ function send_email(event){
 
 }
 
-function load_email(id){
+function load_email(id, mailbox){
   document.querySelector('#emails-view').innerHTML = "";
   
   fetch(`/emails/${id}`)
@@ -87,16 +87,32 @@ function load_email(id){
       console.log(email);
 
       // ... do something else with email ...
-      const element = document.createElement('div');
-      // Add a class to the element
-      element.classList.add('email-view');
-      element.innerHTML = `<p><b>From: </b>${email.sender}</p>
+      const head = document.createElement('div');
+      head.innerHTML = `<p><b>From: </b>${email.sender}</p>
       <p><b>To: </b>${email.recipients}</p>
       <p><b>Subject: </b>${email.subject}</p>
-      <p><b>Timestamp: </b>${email.timestamp}</p>
-      <hr>
-      <p>${email.body}</p>`;
-      document.querySelector('#emails-view').append(element);
+      <p><b>Timestamp: </b>${email.timestamp}</p>`;
+      document.querySelector('#emails-view').append(head);
+
+      
+      if(mailbox!='sent'){
+        const button = document.createElement('div');
+        let is_archived=false;
+        if(email.archived==false){
+          button.innerHTML = '<button class="btn btn-sm btn-outline-primary" id="archive">Archived</button>';
+          is_archived=false;
+        }
+        else if (email.archived==true){ 
+          button.innerHTML = '<button class="btn btn-sm btn-outline-primary" id="unarchive">Unarchived</button>';
+          is_archived=true;
+        }
+        button.addEventListener('click', () => archive_email(email.id, !is_archived));
+        document.querySelector('#emails-view').append(button);
+      }
+     
+      const body = document.createElement('div');
+      body.innerHTML = `<hr><p>${email.body}</p>`;
+      document.querySelector('#emails-view').append(body);
   });
   //Mark the email as read
   fetch(`/emails/${id}`, {
@@ -105,4 +121,19 @@ function load_email(id){
         read: true
     })
   })
+}
+
+function archive_email(id, is_archived){
+  //Mark the email as read
+  fetch(`/emails/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        archived: is_archived
+    })
+  })
+
+  load_mailbox('inbox');
+  location.reload();
+ 
+  
 }
