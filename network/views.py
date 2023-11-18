@@ -8,6 +8,9 @@ from .models import User, Post
 
 
 def index(request):
+    if request.method=="GET":
+        posts=Post.objects.all().order_by('-date')
+        return render(request, "network/index.html", {'posts':posts})
     return render(request, "network/index.html")
 
 
