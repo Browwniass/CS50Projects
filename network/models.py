@@ -12,3 +12,10 @@ class Post(models.Model):
     
     def __str__(self):
         return f"{self.user}[{self.date}]:{self.content}"
+    
+class Follow(models.Model):
+    user_following = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_following")
+    user_follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name="user_follower")
+    
+    def __str__(self):
+        return f"{self.user_following} is following {self.user_follower}"
