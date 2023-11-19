@@ -1,10 +1,12 @@
+import json
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.http import JsonResponse
 
-from .models import User, Post
+from .models import User, Post, Follow
 
 
 def index(request):
@@ -13,6 +15,12 @@ def index(request):
         return render(request, "network/index.html", {'posts':posts})
     return render(request, "network/index.html")
 
+def profile_view(request, id):
+    user = User.objects.get(pk=id)
+    following_count = len(Follow.objects.filter(user_follower=user))
+    follower_count = len(Follow.objects.filter(user_following=user))
+    return render(request, "network/profile.html", {'user_prof_id':id, 'user_prof':user,
+                'following_count':following_count, 'follower_count':follower_count})
 
 def login_view(request):
     if request.method == "POST":
@@ -73,3 +81,14 @@ def new_post(request):
         )
         new_post.save()
     return HttpResponseRedirect(reverse("index"))
+
+def profile_show(request, profilebox):
+    id = int(request.GET.get('id'))
+    user = User.objects.get(pk=id)
+    if(profilebox == 'post'):
+        boxs = Post.objects.filter(user=user)
+    if(profilebox == 'following'):
+        boxs = Follow.objects.filter(user_follower=user)
+    if(profilebox == 'follower'):
+        boxs = Follow.objects.filter(user_following=user)
+    return JsonResponse([box.serialize() for box in boxs], safe=False)
