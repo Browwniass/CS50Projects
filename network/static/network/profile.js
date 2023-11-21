@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#user-following').addEventListener('click', () => load_posts('following'));
     document.querySelector('#user-follower').addEventListener('click', () => load_posts('follower'));
     document.querySelector('#user-post').addEventListener('click', () => load_posts('post'));
+    document.querySelector('#user-follow').addEventListener('click', () => follow());
   
     // By default, load the inbox
     load_posts('post');
@@ -33,11 +34,9 @@ function load_posts(profilebox) {
                 <p>${ post.date }</p>`;
             }
             else if(profilebox === 'follower'){
-                console.log(post.id_er)
                 element.innerHTML = `<h4><a class="link" color="black" href="${ post.id_er }"><strong>${ post.user_follower }</strong></a></h4>`;
             }
             else if(profilebox === 'following'){
-                console.log(post.id_ing)
                 element.innerHTML = `<h4><a class="link" color="black" href="${ post.id_ing }"><strong>${ post.user_following }</strong></a></h4>`;
             }
             
@@ -45,4 +44,20 @@ function load_posts(profilebox) {
         })    
 
     });
+}
+
+function follow(){
+    let user_following = document.querySelector('#user-follow').innerHTML;
+    let user_id = document.querySelector('#user-name').innerHTML;
+    let user_follower = document.querySelector('#user-follower').innerHTML;
+    count_folllowers = parseInt(user_follower.slice(-1));
+    fetch(`/follow/${user_id}`)
+    if(user_following==="Follow"){
+        document.querySelector('#user-follow').innerHTML = `Unfollow`;
+        document.querySelector('#user-follower').innerHTML = `Followers ${count_folllowers+1}`
+    }
+    else{
+        document.querySelector('#user-follow').innerHTML = `Follow`;
+        document.querySelector('#user-follower').innerHTML = `Followers ${count_folllowers-1}`
+    }
 }

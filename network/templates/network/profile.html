@@ -5,11 +5,13 @@
     <h2>{{ user_prof }}</h2>
     <p hidden id="user-name">{{ user_prof_id }}</p>
     
-    
+    {% if user.is_authenticated and user_prof.username != user.username %}
+    <button hidden onclick="window.location.href='../follow/{{ user_prof_id}}?is_followed={{ is_follower }}'" class="btn btn-primary btn-sm" type="button">{{ is_follower }}</button></a>
+    <button  class="btn btn-primary btn-sm" id="user-follow">{{ is_follower }}</button>
+    {% endif %}
     <button class="btn btn-sm btn-outline-primary" id="user-post">Posts</button>
     <button class="btn btn-sm btn-outline-primary" id="user-following">Following {{ following_count }}</button>
-    <button class="btn btn-sm btn-outline-primary" id="user-follower">Follower {{ follower_count }}</button>
-
+    <button class="btn btn-sm btn-outline-primary" id="user-follower">Followers {{ follower_count }}</button>
     <div id="posts-view">
     </div>
 {% endblock %}
