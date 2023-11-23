@@ -25,7 +25,7 @@ def profile_view(request, id):
                 'following_count':following_count, 'follower_count':follower_count, "is_follower": is_follower})
 
 def following_view(request):
-    following_list = Follow.objects.filter(user_following=request.user).values_list("user_follower", flat=True)
+    following_list = Follow.objects.filter(user_follower=request.user).values_list("user_following", flat=True)
     following_post = Post.objects.filter(user__id__in=following_list)   
     return render(request, "network/following_page.html", {'posts':following_post})
 
