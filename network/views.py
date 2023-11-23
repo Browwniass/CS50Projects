@@ -24,6 +24,11 @@ def profile_view(request, id):
     return render(request, "network/profile.html", {'user_prof_id':id, 'user_prof':user,
                 'following_count':following_count, 'follower_count':follower_count, "is_follower": is_follower})
 
+def following_view(request):
+    following_list = Follow.objects.filter(user_following=request.user).values_list("user_follower", flat=True)
+    following_post = Post.objects.filter(user__id__in=following_list)   
+    return render(request, "network/following_page.html", {'posts':following_post})
+
 def login_view(request):
     if request.method == "POST":
 
@@ -98,7 +103,7 @@ def profile_show(request, profilebox):
 def follow(request, id):
     user_following = User.objects.get(pk=id)
     is_follower = "Unfollow" if (Follow.objects.filter(user_following=user_following,
-                            user_follower=request.user).exists()) else "Follow"
+                user_follower=request.user).exists()) else "Follow"
     print(is_follower)
     if is_follower=="Follow":
         new_follow = Follow(
@@ -109,7 +114,7 @@ def follow(request, id):
     elif is_follower == "Unfollow":
         cur_following=Follow.objects.get(user_following=user_following, user_follower=request.user)
         cur_following.delete()
-    #return HttpResponseRedirect(reverse("profile", kwargs={'id': id}))   
-    return JsonResponse({"message": "Follow was set successfully."}, status=201)
+    return HttpResponseRedirect(reverse("profile", kwargs={'id': id}))   
+    #return JsonResponse({"message": "Follow was set successfully."}, status=201)
 
     

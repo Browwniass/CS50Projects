@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#user-following').addEventListener('click', () => load_posts('following'));
     document.querySelector('#user-follower').addEventListener('click', () => load_posts('follower'));
     document.querySelector('#user-post').addEventListener('click', () => load_posts('post'));
-    document.querySelector('#user-follow').addEventListener('click', () => follow());
   
     // By default, load the inbox
     load_posts('post');
