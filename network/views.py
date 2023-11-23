@@ -5,14 +5,19 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
-
+from django.core.paginator import Paginator
 from .models import User, Post, Follow
 
 
 def index(request):
     if request.method=="GET":
         posts=Post.objects.all().order_by('-date')
-        return render(request, "network/index.html", {'posts':posts})
+
+        paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj})
     return render(request, "network/index.html")
 
 def profile_view(request, id):
