@@ -16,7 +16,6 @@ def index(request):
         paginator = Paginator(posts, 1)  # Show 10 contacts per page.
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-
         return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj})
     return render(request, "network/index.html")
 
@@ -26,13 +25,24 @@ def profile_view(request, id):
     follower_count = len(Follow.objects.filter(user_following=user))
     is_follower = "Unfollow" if (Follow.objects.filter(user_following=user,
                             user_follower=request.user).exists()) else "Follow"
+    
+    posts = Post.objects.filter(user=user)
+    paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/profile.html", {'user_prof_id':id, 'user_prof':user,
-                'following_count':following_count, 'follower_count':follower_count, "is_follower": is_follower})
+                'following_count':following_count, 'follower_count':follower_count,
+                "is_follower": is_follower, 'page_obj':page_obj})
 
 def following_view(request):
     following_list = Follow.objects.filter(user_follower=request.user).values_list("user_following", flat=True)
-    following_post = Post.objects.filter(user__id__in=following_list)   
-    return render(request, "network/following_page.html", {'posts':following_post})
+    following_post = Post.objects.filter(user__id__in=following_list).order_by('-date')
+    
+    paginator = Paginator(following_post, 1)  # Show 10 contacts per page.
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, "network/following_page.html", {'posts':following_post, 'page_obj':page_obj})
 
 def login_view(request):
     if request.method == "POST":
@@ -98,10 +108,16 @@ def profile_show(request, profilebox):
     id = int(request.GET.get('id'))
     user = User.objects.get(pk=id)
     if(profilebox == 'post'):
-        boxs = Post.objects.filter(user=user)
-    if(profilebox == 'following'):
+        posts = Post.objects.filter(user=user)
+
+        paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+        return render(request, "network/profile.html", {'posts':posts, 'page_obj':page_obj})
+
+    elif(profilebox == 'following'):
         boxs = Follow.objects.filter(user_follower=user)
-    if(profilebox == 'follower'):
+    elif(profilebox == 'follower'):
         boxs = Follow.objects.filter(user_following=user)
     return JsonResponse([box.serialize() for box in boxs], safe=False)
 
