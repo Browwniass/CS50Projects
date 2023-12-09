@@ -8,3 +8,7 @@ body{background:#f1f0f0;margin: 15px;}.ratings i{font-size: 16px;color: red}.str
 textarea {
     width: 100%;
 }
+.edit-forms{
+    display:none;
+    margin-top: 5px;
+}

@@ -19,8 +19,22 @@
         {# Each "contact" is a Contact model object. #}
         <div class="post-item">
             <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
-            <p>{{ post.content }}</p>
-            <p>{{ post.date }}</p>
+    
+            <p id="content-{{ post.id }}">{{ post.content }}</p>
+            <p id="data-{{ post.id }}">{{ post.date }}</p>
+            {% if user.id == post.user.id %}
+            <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
+            <!--<input class="btn btn-primary"  id="edit_but" type="submit" value="Edit">-->
+            <div class="edit-forms" id="form-{{ post.id }}">
+                
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea id="editarea-{{ post.id }}" class="form-control" placeholder="Type..." rows="3" name="content"></textarea>
+                </div>
+                <input id="but-edit-{{ post.id }}" class="btn btn-success" id="save_edit_but" type="submit" value="Save" onclick="saving_edit('{{ post.id }}');" >
+                
+            </div>
+            {% endif %}
         </div>
         {% endfor %}
 
@@ -61,4 +75,5 @@
 
 {% block script %}
     <script src="{% static 'network/profile.js' %}"></script>
+    <script src="{% static 'network/posts_manager.js' %}"></script>
 {% endblock %}

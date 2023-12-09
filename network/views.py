@@ -13,7 +13,7 @@ def index(request):
     if request.method=="GET":
         posts=Post.objects.all().order_by('-date')
 
-        paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+        paginator = Paginator(posts, 10)  # Show 10 contacts per page.
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
         return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj})
@@ -139,3 +139,10 @@ def follow(request, id):
     #return JsonResponse({"message": "Follow was set successfully."}, status=201)
 
     
+def saving_edit(request, post_id):
+    post=Post.objects.get(id=post_id)
+    edit_content = request.GET.get('content')
+    if request.user.id == post.user.id:
+        post.content = edit_content
+        post.save()
+    return JsonResponse({"post": f"{edit_content}"}, status=201)
