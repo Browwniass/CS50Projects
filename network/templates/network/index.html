@@ -29,6 +29,7 @@
     
     <p id="content-{{ post.id }}">{{ post.content }}</p>
     <p id="data-{{ post.id }}">{{ post.date }}</p>
+    {% if user.is_authenticated %}
     {% if user.id == post.user.id %}
     <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
     <!--<input class="btn btn-primary"  id="edit_but" type="submit" value="Edit">-->
@@ -41,6 +42,13 @@
         <input id="but-edit-{{ post.id }}" class="btn btn-success" id="save_edit_but" type="submit" value="Save" onclick="saving_edit('{{ post.id }}');" >
         
     </div>
+    {% endif %}
+    {% if post.id in cur_user_liked %}
+    
+    <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Unlike" onclick="likes('{{ post.id }}', 1);" >
+    {% else %}
+    <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Like" onclick="likes('{{ post.id }}', 0);" >
+    {% endif %}
     {% endif %}
 </div>
 {% endfor %}

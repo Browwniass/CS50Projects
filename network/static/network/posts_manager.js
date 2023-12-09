@@ -40,3 +40,15 @@ function saving_edit(post_id){
     });
 
 }
+
+function likes(post_id, is_liked){
+    var but_likes = document.getElementById(`but-likes-${post_id}`);
+    fetch(`/liking/${post_id}?is_liked=${but_likes.value}`)
+    
+    if(but_likes.value == "Like") {
+        but_likes.value = "Unlike";
+    }
+    else{
+        but_likes.value = "Like" 
+    } 
+}

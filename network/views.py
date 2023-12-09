@@ -6,7 +6,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
-from .models import User, Post, Follow
+from .models import User, Post, Follow, Likes
 
 
 def index(request):
@@ -16,7 +16,17 @@ def index(request):
         paginator = Paginator(posts, 10)  # Show 10 contacts per page.
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-        return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj})
+        likes = Likes.objects.all()
+
+        cur_user_liked = []
+        try:
+            for like in likes:
+                if like.user.id == request.user.id:
+                    cur_user_liked.append(like.post.id)
+        except:
+            cur_user_liked = []
+        print(cur_user_liked)
+        return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj, 'cur_user_liked': cur_user_liked})
     return render(request, "network/index.html")
 
 def profile_view(request, id):
@@ -146,3 +156,17 @@ def saving_edit(request, post_id):
         post.content = edit_content
         post.save()
     return JsonResponse({"post": f"{edit_content}"}, status=201)
+
+def liking_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    is_liked = request.GET.get('is_liked')
+    if is_liked == "Like":
+        like = Likes(
+            post = post,
+            user = request.user
+        )
+        like.save()
+    else:
+        like = Likes.objects.get(post=post, user=request.user)
+        like.delete()
+    return JsonResponse({"message": "Like was set successfully."}, status=201)
