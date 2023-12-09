@@ -1,0 +1,14 @@
+body{background:#f1f0f0;margin: 15px;}.ratings i{font-size: 16px;color: red}.strike-text{color: red;text-decoration: line-through}.product-image{max-width: 500px; max-height: 450px}.dot{height: 7px;width: 7px;margin-left: 6px;margin-right: 6px;margin-top: 3px;background-color: blue;border-radius: 50%;display: inline-block}.spec-1{color: #938787;font-size: 15px}h5{font-weight: 400}.para{font-size: 16px}
+.post-item{
+    border: black 1px solid;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+textarea {
+    width: 100%;
+}
+.edit-forms{
+    display:none;
+    margin-top: 5px;
+}

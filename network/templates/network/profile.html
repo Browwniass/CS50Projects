@@ -1,0 +1,79 @@
+{% extends "network/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <h2>{{ user_prof }}</h2>
+    <p hidden id="user-name">{{ user_prof_id }}</p>
+    
+    {% if user.is_authenticated and user_prof.id != user.id %}
+    <button onclick="window.location.href='../follow/{{ user_prof_id}}'" class="btn btn-primary btn-sm" type="button">{{ is_follower }}</button></a>
+    <button hidden class="btn btn-primary btn-sm" id="user-follow">{{ is_follower }}</button>
+    {% endif %}
+    <button class="btn btn-sm btn-outline-primary" id="user-post">Posts</button>
+    <button class="btn btn-sm btn-outline-primary" id="user-following">Following {{ following_count }}</button>
+    <button class="btn btn-sm btn-outline-primary" id="user-follower">Followers {{ follower_count }}</button>
+    
+    <div id="posts-view">
+        <h3>Posts</h3>
+        {% for post in page_obj %}
+        {# Each "contact" is a Contact model object. #}
+        <div class="post-item">
+            <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
+    
+            <p id="content-{{ post.id }}">{{ post.content }}</p>
+            <p id="data-{{ post.id }}">{{ post.date }}</p>
+            {% if user.id == post.user.id %}
+            <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
+            <!--<input class="btn btn-primary"  id="edit_but" type="submit" value="Edit">-->
+            <div class="edit-forms" id="form-{{ post.id }}">
+                
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea id="editarea-{{ post.id }}" class="form-control" placeholder="Type..." rows="3" name="content"></textarea>
+                </div>
+                <input id="but-edit-{{ post.id }}" class="btn btn-success" id="save_edit_but" type="submit" value="Save" onclick="saving_edit('{{ post.id }}');" >
+                
+            </div>
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+
+                    {% if page_obj.previous_page_number > 1 %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number|add:'-1' }}">{{ page_obj.number|add:"-2" }}</a></li>
+                    {% endif %}
+                    
+                    <li hidden class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">{{ page_obj.number|add:"-1" }}</a></li>
+                {% endif %}
+                
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link">
+                        {{ page_obj.number }}
+                    <span class="sr-only">(current)</span>
+                    </span>
+                </li>
+                
+                {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">{{ page_obj.number|add:"1" }}</a></li>  
+                    {% if page_obj.next_page_number <  page_obj.paginator.num_pages %}
+                        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number|add:'1' }}">{{ page_obj.number|add:"2" }}</a></li>
+                    {% endif %}
+                    <li hidden class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                    <li class="page-item"></li><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+    <div id="follow-view"></div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'network/profile.js' %}"></script>
+    <script src="{% static 'network/posts_manager.js' %}"></script>
+{% endblock %}
