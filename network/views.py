@@ -7,7 +7,6 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import User, Post, Follow, Likes
-from django.db.models import Avg, Max, Min, Count
 
 def likes_count(request):
     likes = Likes.objects.all()
