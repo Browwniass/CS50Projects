@@ -7,25 +7,29 @@ from django.urls import reverse
 from django.http import JsonResponse
 from django.core.paginator import Paginator
 from .models import User, Post, Follow, Likes
+from django.db.models import Avg, Max, Min, Count
 
+def likes_count(request):
+    likes = Likes.objects.all()
+
+    cur_user_liked = []
+    try:
+        for like in likes:
+            if like.user.id == request.user.id:
+                cur_user_liked.append(like.post.id)
+    except:
+        cur_user_liked = []
+    return cur_user_liked
 
 def index(request):
     if request.method=="GET":
         posts=Post.objects.all().order_by('-date')
-
+        #l = Likes.objects.values('post').order_by('post').annotate(group_count=Count("post"))
         paginator = Paginator(posts, 10)  # Show 10 contacts per page.
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
-        likes = Likes.objects.all()
-
-        cur_user_liked = []
-        try:
-            for like in likes:
-                if like.user.id == request.user.id:
-                    cur_user_liked.append(like.post.id)
-        except:
-            cur_user_liked = []
-        print(cur_user_liked)
+        
+        cur_user_liked =likes_count(request)
         return render(request, "network/index.html", {'posts':posts, 'page_obj':page_obj, 'cur_user_liked': cur_user_liked})
     return render(request, "network/index.html")
 
@@ -33,26 +37,34 @@ def profile_view(request, id):
     user = User.objects.get(pk=id)
     following_count = len(Follow.objects.filter(user_follower=user))
     follower_count = len(Follow.objects.filter(user_following=user))
-    is_follower = "Unfollow" if (Follow.objects.filter(user_following=user,
+    try:
+
+        is_follower = "Unfollow" if (Follow.objects.filter(user_following=user,
                             user_follower=request.user).exists()) else "Follow"
-    
-    posts = Post.objects.filter(user=user)
-    paginator = Paginator(posts, 1)  # Show 10 contacts per page.
+    except:
+        is_follower = 0
+    posts = Post.objects.filter(user=user).order_by('-date')
+    paginator = Paginator(posts, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+
+    cur_user_liked =likes_count(request)
+
     return render(request, "network/profile.html", {'user_prof_id':id, 'user_prof':user,
                 'following_count':following_count, 'follower_count':follower_count,
-                "is_follower": is_follower, 'page_obj':page_obj})
+                "is_follower": is_follower, 'page_obj':page_obj, 'cur_user_liked': cur_user_liked})
+    
 
 def following_view(request):
     following_list = Follow.objects.filter(user_follower=request.user).values_list("user_following", flat=True)
     following_post = Post.objects.filter(user__id__in=following_list).order_by('-date')
     
-    paginator = Paginator(following_post, 1)  # Show 10 contacts per page.
+    paginator = Paginator(following_post, 10)  # Show 10 contacts per page.
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    cur_user_liked =likes_count(request)
     
-    return render(request, "network/following_page.html", {'posts':following_post, 'page_obj':page_obj})
+    return render(request, "network/following_page.html", {'posts':following_post, 'page_obj':page_obj, 'cur_user_liked': cur_user_liked})
 
 def login_view(request):
     if request.method == "POST":
@@ -159,7 +171,9 @@ def saving_edit(request, post_id):
 
 def liking_post(request, post_id):
     post = Post.objects.get(id=post_id)
-    is_liked = request.GET.get('is_liked')
+    #is_liked = request.GET.get('is_liked')
+    is_liked = "Unlike" if len(Likes.objects.filter(post = post, user = request.user).values_list())>0 else "Like"
+    #print(is_l)
     if is_liked == "Like":
         like = Likes(
             post = post,
@@ -169,4 +183,4 @@ def liking_post(request, post_id):
     else:
         like = Likes.objects.get(post=post, user=request.user)
         like.delete()
-    return JsonResponse({"message": "Like was set successfully."}, status=201)
+    return JsonResponse({"is_liked": is_liked}, status=201)

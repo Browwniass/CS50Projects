@@ -10,5 +10,8 @@ textarea {
 }
 .edit-forms{
     display:none;
-    margin-top: 5px;
+    margin: 5px;
+}
+.btn{
+    margin: 0px 0px;
 }

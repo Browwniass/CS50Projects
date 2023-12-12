@@ -1,6 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-
+from django.db.models import Avg, Max, Min, Count
 
 class User(AbstractUser):
     pass
@@ -19,7 +19,9 @@ class Post(models.Model):
         }
     
     def number_of_likes(self):
-        return self.likes.count()
+        likes = Likes.objects.filter(post=self).values('post').order_by('post').annotate(group_count=Count("post")).values('group_count')
+        num = likes[0]['group_count'] if len(likes)>0 else 0
+        return num 
     
     def __str__(self):
         return f"{self.user}[{self.date}]:{self.content}"

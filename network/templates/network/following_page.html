@@ -1,16 +1,41 @@
 {% extends "network/layout.html" %}
+{% load static %}
 
 {% block body %}
 <h1>Following Posts</h1>
 {% if user.is_authenticated %}
-{% for post in page_obj %}
-{# Each "contact" is a Contact model object. #}
-<div class="post-item">
-    <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
-    <p>{{ post.content }}</p>
-    <p>{{ post.date }}</p>
-</div>
-{% endfor %}
+<div id="posts_view">
+    {% for post in page_obj %}
+
+    <div class="post-item">
+        <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
+        
+        <p id="content-{{ post.id }}">{{ post.content }}</p>
+        <p id="data-{{ post.id }}">{{ post.date }}</p>
+        {% if user.is_authenticated %}
+        {% if user.id == post.user.id %}
+        <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
+        <div class="edit-forms" id="form-{{ post.id }}">
+            
+            {% csrf_token %}
+            <div class="form-group">
+                <textarea id="editarea-{{ post.id }}" class="form-control" placeholder="Type..." rows="3" name="content"></textarea>
+            </div>
+            <input id="but-edit-{{ post.id }}" class="btn btn-success" id="save_edit_but" type="submit" value="Save" onclick="saving_edit('{{ post.id }}');" >
+            
+        </div>
+        {% endif %}
+        {% if post.id in cur_user_liked %}
+        
+        <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Unlike" onclick="likes('{{ post.id }}', 1);" >
+        {% else %}
+        <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Like" onclick="likes('{{ post.id }}', 0);" >
+        {% endif %}
+        {% endif %}
+        <span>Likes: </span><span id="count-likes-{{ post.id }}">{{ post.number_of_likes }}</span>
+    </div>
+    {% endfor %}
+    </div>
 {% endif %}
 <nav aria-label="Page navigation example">
     <ul class="pagination">
@@ -42,4 +67,7 @@
         {% endif %}
     </ul>
 </nav>
+{% endblock %}
+{% block script %}
+    <script src="{% static 'network/posts_manager.js' %}"></script>
 {% endblock %}

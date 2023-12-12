@@ -16,15 +16,14 @@
     <div id="posts-view">
         <h3>Posts</h3>
         {% for post in page_obj %}
-        {# Each "contact" is a Contact model object. #}
         <div class="post-item">
             <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
     
             <p id="content-{{ post.id }}">{{ post.content }}</p>
             <p id="data-{{ post.id }}">{{ post.date }}</p>
+            {% if user.is_authenticated %}
             {% if user.id == post.user.id %}
             <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
-            <!--<input class="btn btn-primary"  id="edit_but" type="submit" value="Edit">-->
             <div class="edit-forms" id="form-{{ post.id }}">
                 
                 {% csrf_token %}
@@ -35,6 +34,14 @@
                 
             </div>
             {% endif %}
+            {% if post.id in cur_user_liked %}
+    
+            <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Unlike" onclick="likes('{{ post.id }}', 1);" >
+            {% else %}
+            <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Like" onclick="likes('{{ post.id }}', 0);" >
+            {% endif %}
+            {% endif %}
+            <span>Likes: </span><span id="count-likes-{{ post.id }}">{{ post.number_of_likes }}</span>
         </div>
         {% endfor %}
 

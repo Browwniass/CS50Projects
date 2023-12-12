@@ -13,17 +13,10 @@
             <input class="btn btn-success" type="submit" value="Send">
         </form>
     </div>
-    <!--{% for post in posts %}
-        <div class="post-item">
-            <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
-            <p>{{ post.content }}</p>
-            <p>{{ post.date }}</p>
-        </div>
-    {% endfor %}-->
+
     {% endif %}
 <div id="posts_view">
 {% for post in page_obj %}
-{# Each "contact" is a Contact model object. #}
 <div class="post-item">
     <h4><a class="link" color="black "href="{% url 'profile' post.user.id %}"><strong>{{ post.user }}</strong></a></h4>
     
@@ -32,7 +25,6 @@
     {% if user.is_authenticated %}
     {% if user.id == post.user.id %}
     <input id="but-{{ post.id }}" type="button" class="btn btn-success" value="Edit" onclick="edit_view('{{ post.id }}');" />
-    <!--<input class="btn btn-primary"  id="edit_but" type="submit" value="Edit">-->
     <div class="edit-forms" id="form-{{ post.id }}">
         
         {% csrf_token %}
@@ -50,27 +42,10 @@
     <input id="but-likes-{{ post.id }}" class="btn btn-info" id="save_edit_but" type="submit" value="Like" onclick="likes('{{ post.id }}', 0);" >
     {% endif %}
     {% endif %}
+    <span>Likes: </span><span id="count-likes-{{ post.id }}">{{ post.number_of_likes }}</span>
 </div>
 {% endfor %}
 </div>
-<div id="view"></div>
-<!--<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>-->
 <nav aria-label="Page navigation example">
     <ul class="pagination">
         {% if page_obj.has_previous %}

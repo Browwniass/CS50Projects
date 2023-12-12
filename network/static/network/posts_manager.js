@@ -41,14 +41,21 @@ function saving_edit(post_id){
 
 }
 
-function likes(post_id, is_liked){
+function likes(post_id){
     var but_likes = document.getElementById(`but-likes-${post_id}`);
+    var count_likes = document.getElementById(`count-likes-${post_id}`);
     fetch(`/liking/${post_id}?is_liked=${but_likes.value}`)
-    
-    if(but_likes.value == "Like") {
-        but_likes.value = "Unlike";
-    }
-    else{
-        but_likes.value = "Like" 
-    } 
+    .then(response => response.json())
+    .then(posts => {
+        if(posts["is_liked"] == "Like") {
+            but_likes.value = "Unlike";
+            count_likes.innerHTML = Number(count_likes.innerHTML)+1;
+            
+        }
+        else{
+            but_likes.value = "Like" 
+            count_likes.innerHTML = Number(count_likes.innerHTML)-1;
+        }
+    });
+
 }
